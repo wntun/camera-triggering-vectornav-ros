@@ -1,0 +1,12 @@
+string type
+uint8 id
+uint64 gps_time
+uint16 gps_week
+float64 latitude
+float64 longitude
+float64 altitude
+float64 relative_altitude
+float64 gps_altitude
+float64 roll
+float64 pitch
+float64 yaw
