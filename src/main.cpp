@@ -334,7 +334,8 @@ int main(int argc, char *argv[])
             | INSGROUP_POSLLA
             | INSGROUP_POSECEF
             | INSGROUP_VELBODY
-            | INSGROUP_ACCELECEF);
+            | INSGROUP_ACCELECEF,
+    	    GPSGROUP_NONE);
 
     vs.writeBinaryOutput1(bor);
     
