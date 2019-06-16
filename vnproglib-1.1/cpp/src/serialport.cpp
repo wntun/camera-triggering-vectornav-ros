@@ -337,6 +337,7 @@ struct SerialPort::Impl
 
 				#elif __linux__ || __APPLE__ || __CYGWIN__ || __QNXNTO__
 
+				FD_ZERO(&readfs);
 				FD_SET(SerialPortHandle, &readfs);
 
 				// Select sets the values in readWaitTime.
@@ -463,10 +464,6 @@ struct SerialPort::Impl
 			if (_dataReceivedHandler != NULL)
 			{
 				_dataReceivedHandler(_dataReceivedUserData);
-			}
-			else
-			{
-				return;
 			}
 		}
 		catch (exception& e)
