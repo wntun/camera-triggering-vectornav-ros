@@ -52,6 +52,9 @@ enum AsciiAsync
 	VNISL	= 28,		///< Asynchronous output type is INS LLA 2 solution.
 	VNISE	= 29,		///< Asynchronous output type is INS ECEF 2 solution.
 	VNDTV	= 30,		///< Asynchronous output type is Delta Theta and Delta Velocity.
+  VNG2S = 32,		///< Asynchronous output type is GPS LLA.
+  VNG2E = 33,		///< Asynchronous output type is GPS ECEF.
+
 	#ifdef INTERNAL
 	VNRAW	= 252,		///< Asynchronous output type is Raw Voltage Measurements.
 	VNCMV	= 253,		///< Asynchronous output type is Calibrated Measurements.
@@ -77,7 +80,8 @@ enum BinaryGroup
 	BINARYGROUP_IMU = 0x04,			///< IMU group.
 	BINARYGROUP_GPS = 0x08,			///< GPS group.
 	BINARYGROUP_ATTITUDE = 0x10,	///< Attitude group.
-	BINARYGROUP_INS = 0x20			///< INS group.
+	BINARYGROUP_INS = 0x20,			///< INS group.
+  BINARYGROUP_GPS2 = 0x40			///< GPS2 group.
 };
 
 /// \brief Flags for the binary group 1 'Common' in the binary output registers.
@@ -112,7 +116,9 @@ enum TimeGroup
 	TIMEGROUP_TIMESYNCIN			= 0x0010,	///< TimeSyncIn.
 	TIMEGROUP_TIMEGPSPPS			= 0x0020,	///< TimeGpsPps.
 	TIMEGROUP_TIMEUTC				= 0x0040,	///< TimeUTC.
-	TIMEGROUP_SYNCINCNT				= 0x0080	///< SyncInCnt.
+	TIMEGROUP_SYNCINCNT			= 0x0080,	///< SyncInCnt.
+  TIMEGROUP_SYNCOUTCNT    = 0x0100,	///< SyncOutCnt.
+  TIMEGROUP_TIMESTATUS    = 0x0200	///< TimeStatus.
 };
 
 /// \brief Flags for the binary group 3 'IMU' in the binary output registers.
@@ -133,22 +139,24 @@ enum ImuGroup
 	IMUGROUP_SENSSAT				= 0x0800,	///< SensSat.
 };
 
-/// \brief Flags for the binary group 4 'GPS' in the binary output registers.
+/// \brief Flags for the binary group 4 'GPS' and group 7 'GPS2' in the binary output registers.
 enum GpsGroup
 {
 	GPSGROUP_NONE					= 0x0000,	///< None.
 	GPSGROUP_UTC					= 0x0001,	///< UTC.
 	GPSGROUP_TOW					= 0x0002,	///< Tow.
 	GPSGROUP_WEEK					= 0x0004,	///< Week.
-	GPSGROUP_NUMSATS				= 0x0008,	///< NumSats.
+	GPSGROUP_NUMSATS			= 0x0008,	///< NumSats.
 	GPSGROUP_FIX					= 0x0010,	///< Fix.
-	GPSGROUP_POSLLA					= 0x0020,	///< PosLla.
-	GPSGROUP_POSECEF				= 0x0040,	///< PosEcef.
-	GPSGROUP_VELNED					= 0x0080,	///< VelNed.
-	GPSGROUP_VELECEF				= 0x0100,	///< VelEcef.
+	GPSGROUP_POSLLA				= 0x0020,	///< PosLla.
+	GPSGROUP_POSECEF			= 0x0040,	///< PosEcef.
+	GPSGROUP_VELNED				= 0x0080,	///< VelNed.
+	GPSGROUP_VELECEF			= 0x0100,	///< VelEcef.
 	GPSGROUP_POSU					= 0x0200,	///< PosU.
 	GPSGROUP_VELU					= 0x0400,	///< VelU.
-	GPSGROUP_TIMEU					= 0x0800,	///< TimeU.
+	GPSGROUP_TIMEU				= 0x0800,	///< TimeU.
+  GPSGROUP_TIMEINFO     = 0x1000,	///< TimeInfo.
+  GPSGROUP_DOP          = 0x2000,	///< Dop.
 };
 
 /// \brief Flags for the binary group 5 'Attitude' in the binary output registers.
@@ -220,7 +228,9 @@ enum SyncInMode
 	/// \brief Start IMU sampling on trigger of SYNC_IN pin.
 	SYNCINMODE_IMU = 4,
 	/// \brief Output asynchronous message on trigger of SYNC_IN pin.
-	SYNCINMODE_ASYNC = 5
+	SYNCINMODE_ASYNC = 5,
+	/// \brief Output asynchronous 0Hz message on trigger of SYNC_IN pin.
+	SYNCINMODE_ASYNC3 = 6
 };
 
 /// \brief Different modes for the SyncInEdge field of the Synchronization Control register.
@@ -555,10 +565,29 @@ struct TimeUtc
 	uint8_t hour;	///< \brief Hour field.
 	uint8_t min;	///< \brief Min field.
 	uint8_t sec;	///< \brief Sec field.
-	uint8_t ms;		///< \brief Ms field.
+	uint16_t ms;		///< \brief Ms field.
 
 	/// \brief Default constructor.
 	//TimeUtc() { }
+};
+
+/// \brief TimeInfo as represented by the VectorNav sensor.
+struct TimeInfo
+{
+  uint8_t timeStatus;	///< \brief Time Status field.
+  int8_t  leapSecs;	///< \brief Leap Seconds field.
+};
+
+/// \brief TimeInfo as represented by the VectorNav sensor.
+struct GnssDop
+{
+  float gDop;	///< \brief gDOP field.
+  float pDop;	///< \brief pDOP field.
+  float tDop;	///< \brief tDOP field.
+  float vDop;	///< \brief vDOP field.
+  float hDop;	///< \brief hDOP field.
+  float nDop;	///< \brief nDOP field.
+  float eDop;	///< \brief gDOP field.
 };
 
 /// \brief Allows combining flags of the CommonGroup enum.
