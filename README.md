@@ -5,7 +5,7 @@ The system is built on Raspberry pi 3.
 Triggering is controlled from Mission Planner (ARDUPILOT)'s 'trigger camera now' via FlightController using GPIO connection.
 In the demo [1], Sony Alpha 5100 is chosen but every kind of camera is possible to be used.
 
-For VectorNav driver, [2] is used and installation details can be seen in [2].
+For VectorNav 310 driver, [2] is used with few updates and installation details can be seen in [2]. 
 
 
 References 
